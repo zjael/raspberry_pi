@@ -1,0 +1,48 @@
+---
+- name: Set authorized key, removing all the authorized keys already set
+  authorized_key:
+    user: '{{ ansible_user }}'
+    key: '{{ item }}'
+    state: present
+    exclusive: True
+  with_file: '{{ ssh_public_key }}'
+  when: ssh_public_key is defined
+
+- name: Configure SSH config.
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    state: present
+  with_items:
+    - regexp: '^PermitRootLogin'
+      line: 'PermitRootLogin no'
+    - regexp: '^PermitEmptyPasswords'
+      line: 'PermitEmptyPasswords no'
+  notify: restart ssh
+
+- name: Change SSH Port
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^Port'
+    line: 'Port {{ ssh_port }}'
+  notify: restart ssh
+  when: ssh_port is defined
+
+- name: Disallow password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: restart ssh
+  when: ssh_public_key is defined
+
+- name: Allow password authentication within ip range
+  blockinfile:
+    path: /etc/ssh/sshd_config
+    block: |
+      Match address {{ ssh_allow_password_ip_range }}
+      PermitRootLogin no
+      PasswordAuthentication yes
+  notify: restart ssh
+  when: ssh_allow_password_ip_range is defined

@@ -1,0 +1,7 @@
+- name: Disabling HDMI Port
+  lineinfile:
+    path: /etc/rc.local
+    regexp: '^/usr/bin/tvservice'
+    line: '/usr/bin/tvservice -o'
+    insertafter: '^exit'
+    state: present

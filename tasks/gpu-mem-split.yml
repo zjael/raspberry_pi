@@ -1,0 +1,7 @@
+- name: Setting GPU memory split to {{ gpu_mem }}mb
+  lineinfile:
+    path: /boot/config.txt
+    regexp: '^#?gpu_mem'
+    line: 'gpu_mem={{ gpu_mem }}'
+    insertafter: EOF
+    state: present

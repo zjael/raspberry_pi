@@ -1,0 +1,44 @@
+---
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 3600
+  notify: reboot
+
+- include: addiontional-packages.yml
+  when: packages is defined
+
+- include: change-hostname.yml
+  when: hostname_prefix is defined
+
+- include: change-password.yml
+  when: new_password is defined
+
+- include: locale.yml
+  when: locale is defined
+
+- include: timezone.yml
+  when: timezone is defined
+
+- include: ssh.yml
+
+#- include: firewall.yml
+
+- include: log2ram.yml
+  when: log2ram_size is defined
+
+- include: disable-ipv6.yml
+  when: disable_ipv6_interfaces is defined
+
+- include: disable-hdmi.yml
+  when: disable_hdmi
+
+- include: gpu-mem-split.yml
+  when: gpu_mem is defined
+
+- name: unattended upgrades
+  include_role:
+    name: jnv.unattended-upgrades
+  when: unattended_origins_patterns is defined

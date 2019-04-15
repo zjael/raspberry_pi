@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Jakob Sjaelland
+  description: Configuring raspberry pies
+  license: MIT
+  min_ansible_version: 2.4
+  platforms:
+    - name: Debian
+      versions:
+      - all
+  galaxy_tags:
+    - raspberry
+    - rpi
+    - setup
+  dependencies:
+    - jnv.unattended-upgrades

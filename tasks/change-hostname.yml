@@ -1,0 +1,15 @@
+---
+- name: Get hostname
+  set_fact:
+    hostname: '{{ hostname_prefix }}{{ play_hosts.index(ansible_host) }}'
+
+- name: Assign hostnames
+  hostname:
+    name: '{{ hostname }}'
+
+- name: Add to /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127\.0\.0\.1[ \t]+localhost'
+    line: '127.0.0.1 localhost {{ hostname }}'
+    state: present

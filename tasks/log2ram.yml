@@ -1,0 +1,80 @@
+- name: Check if log2ram is already installed
+  stat:
+    path: /etc/systemd/system/log2ram.service
+  register: log2ram_installed
+
+# - name: 'Skip if already installed'
+#   fail:
+#   when: log2ram_installed.stat.exists
+
+- name: Download log2ram services from master branch
+  get_url:
+    url: "https://github.com/azlux/log2ram/archive/master.tar.gz"
+    dest: "/tmp/log2ram.tar.gz"
+    mode: 0755
+
+- name: Extract archive
+  unarchive:
+    src: /tmp/log2ram.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: log2ram.service
+  copy:
+    src: /tmp/log2ram-master/log2ram.service
+    dest: /etc/systemd/system/log2ram.service
+    mode: 0644
+    remote_src: yes
+
+- name: log2ram binary
+  copy:
+    src: /tmp/log2ram-master/log2ram
+    dest: /usr/local/bin/log2ram
+    mode: 0755
+    remote_src: yes
+
+- name: log2ram config
+  copy:
+    src: /tmp/log2ram-master/log2ram.conf
+    dest: /etc/log2ram.conf
+    mode: 0644
+    remote_src: yes
+
+- name: Change RAM size of log folder to {{ log2ram_size }}mb
+  lineinfile:
+    path: /etc/log2ram.conf
+    regexp: '^SIZE='
+    line: 'SIZE={{ log2ram_size }}M'
+
+- name: log2ram.service
+  copy:
+    src: /tmp/log2ram-master/uninstall.sh
+    dest: /usr/local/bin/uninstall-log2ram.sh
+    mode: 0644
+    remote_src: yes
+
+- name: Ensure log2ram is running on startup
+  systemd:
+    name: log2ram
+    daemon_reload: yes
+    state: started
+    enabled: true
+
+- name: log2ram cron hourly
+  copy:
+    src: /tmp/log2ram-master/log2ram.hourly
+    dest: /etc/cron.hourly/log2ram
+    mode: 0755
+    remote_src: yes
+
+- name: log2ram cron logrotate
+  copy:
+    src: /tmp/log2ram-master/log2ram.logrotate
+    dest: /etc/logrotate.d/log2ram
+    mode: 0644
+    remote_src: yes
+
+- name: Remove a previous log2ram version
+  file:
+    path: /var/log.hdd
+    state: absent
