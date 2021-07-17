@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include raspberry_pi_setup"
+      include_role:
+        name: "raspberry_pi_setup"
