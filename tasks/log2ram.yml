@@ -3,9 +3,11 @@
     path: /etc/systemd/system/log2ram.service
   register: log2ram_installed
 
-# - name: 'Skip if already installed'
-#   fail:
-#   when: log2ram_installed.stat.exists
+- name: Stop log2ram service
+  service:
+    name: log2ram
+    state: stopped
+  when: log2ram_installed.stat.exists
 
 - name: Download log2ram services from master branch
   get_url:
@@ -17,28 +19,18 @@
   unarchive:
     src: /tmp/log2ram.tar.gz
     dest: /tmp/
-    remote_src: yes
+    remote_src: true
 
-- name: log2ram.service
-  copy:
-    src: /tmp/log2ram-master/log2ram.service
-    dest: /etc/systemd/system/log2ram.service
-    mode: 0644
-    remote_src: yes
+- name: Set execute permissions
+  file:
+    path: /tmp/log2ram-master/install.sh
+    mode: u+x
 
-- name: log2ram binary
-  copy:
-    src: /tmp/log2ram-master/log2ram
-    dest: /usr/local/bin/log2ram
-    mode: 0755
-    remote_src: yes
-
-- name: log2ram config
-  copy:
-    src: /tmp/log2ram-master/log2ram.conf
-    dest: /etc/log2ram.conf
-    mode: 0644
-    remote_src: yes
+- name: Install log2ram
+  command:
+    cmd: sh install.sh
+    chdir: /tmp/log2ram-master/
+  changed_when: false
 
 - name: Change RAM size of log folder to {{ log2ram_size }}mb
   lineinfile:
@@ -46,35 +38,9 @@
     regexp: '^SIZE='
     line: 'SIZE={{ log2ram_size }}M'
 
-- name: log2ram.service
-  copy:
-    src: /tmp/log2ram-master/uninstall.sh
-    dest: /usr/local/bin/uninstall-log2ram.sh
-    mode: 0644
-    remote_src: yes
-
 - name: Ensure log2ram is running on startup
   systemd:
     name: log2ram
-    daemon_reload: yes
+    daemon_reload: true
     state: started
     enabled: true
-
-- name: log2ram cron hourly
-  copy:
-    src: /tmp/log2ram-master/log2ram.hourly
-    dest: /etc/cron.hourly/log2ram
-    mode: 0755
-    remote_src: yes
-
-- name: log2ram cron logrotate
-  copy:
-    src: /tmp/log2ram-master/log2ram.logrotate
-    dest: /etc/logrotate.d/log2ram
-    mode: 0644
-    remote_src: yes
-
-- name: Remove a previous log2ram version
-  file:
-    path: /var/log.hdd
-    state: absent

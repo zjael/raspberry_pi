@@ -1,9 +1,6 @@
 ---
-# RAM size for log2ram folder in megabytes
-log2ram_size: '40'
-
 # GPU memory split in megabytes
-gpu_mem: '16' # 16, 64, 128 or 256
+gpu_mem: '16'  # 16, 64, 128 or 256
 
 # Disable HDMI to preserve power
 disable_hdmi: true
@@ -12,7 +9,3 @@ disable_hdmi: true
 disable_ipv6_interfaces:
   - wlan0
   - eth0
-
-# Unattended-upgrade variables
-unattended_origins_patterns:
-  - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'

@@ -1,15 +1,15 @@
 ---
 - name: Set authorized key, removing all the authorized keys already set
-  authorized_key:
+   ansible.posix.authorized_key:
     user: '{{ ansible_user }}'
     key: '{{ item }}'
     state: present
-    exclusive: True
+    exclusive: true
   with_file: '{{ ssh_public_key }}'
   when: ssh_public_key is defined
 
 - name: Configure SSH config.
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '{{ item.regexp }}'
     line: '{{ item.line }}'
@@ -22,7 +22,7 @@
   notify: restart ssh
 
 - name: Change SSH Port
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^Port'
     line: 'Port {{ ssh_port }}'
@@ -30,7 +30,7 @@
   when: ssh_port is defined
 
 - name: Disallow password authentication
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^PasswordAuthentication'
     line: 'PasswordAuthentication no'
@@ -38,7 +38,7 @@
   when: ssh_public_key is defined
 
 - name: Allow password authentication within ip range
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/ssh/sshd_config
     block: |
       Match address {{ ssh_allow_password_ip_range }}

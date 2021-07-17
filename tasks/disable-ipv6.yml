@@ -1,8 +1,7 @@
 ---
 - name: Disable IPv6 for interfaces with sysctl
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.{{ item }}.disable_ipv6
-    value: 1
+    value: "1"
     state: present
   with_items: '{{ disable_ipv6_interfaces }}'
-  ignore_errors: true

@@ -1,6 +1,0 @@
----
-- name: Setup locale
-  locale_gen:
-    name: '{{ locale }}'
-    state: present
-  notify: reconfigure locale

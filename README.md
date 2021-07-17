@@ -1,14 +1,13 @@
 # raspberry pi ansible role
 
+fork of https://github.com/zjael/raspberry_pi
+
 Supports:
 - Update and Upgrade each node.
 - Change node user password.
 - Change hostnames specified by prefix and index from inventory file.
 - Change GPU memory split.
-- Change timezone.
-- Change locale.
 - Change SSH Port
-- Install log2ram.
 - Install specified packages.
 - Disable HDMI to preserve power.
 - Disable IPv6 of specified interfaces.
@@ -19,11 +18,9 @@ Supports:
 By default:
 - Updates and upgrades each node.
 - Disallows SSH root login and empty passwords.
-- Installs log2ram, with 40mb RAM size for log folder.
 - Sets gpu_mem to 16mb.
 - Disables HDMI.
 - Disables IPv6 on wlan0 and eth0
-- Installs unattended upgrades
 
 ## Role Variables
 
@@ -73,24 +70,3 @@ unattended_origins_patterns:
   - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
 ```
 
-## Example Playbook
-
-```yaml
----
-- hosts: all
-  become: true
-
-  vars_files:
-  - config.yml
-
-  roles:
-    - zjael.raspberry_pi
-```
-
-## Credits
-
-Huge thanks to [jnv](https://github.com/jnv) for his awesome [unattended-upgrades](https://github.com/jnv/ansible-role-unattended-upgrades) ansible role.
-
-## License
-
-MIT

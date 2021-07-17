@@ -1,0 +1,14 @@
+- name: Check if nfs-common is installed
+  ansible.builtin.apt:
+    name: nfs-common
+    state: present
+
+- name: Mount drive
+  ansible.posix.mount:
+    fstype: nfs
+    opts: "{{ item.opts | default(omit) }}"
+    boot: "{{ item.boot | default(omit) }}"
+    state: mounted
+    src: "{{ item.src }}"
+    path: "{{ item.path }}"
+  with_items: "{{ nfs_mount }}"

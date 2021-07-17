@@ -1,5 +1,5 @@
 - name: Setting GPU memory split to {{ gpu_mem }}mb
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /boot/config.txt
     regexp: '^#?gpu_mem'
     line: 'gpu_mem={{ gpu_mem }}'

@@ -1,5 +1,5 @@
 - name: Disabling HDMI Port
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/rc.local
     regexp: '^/usr/bin/tvservice'
     line: '/usr/bin/tvservice -o'
