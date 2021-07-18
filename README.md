@@ -31,8 +31,13 @@ By default:
 #locale: 'en_DK.UTF-8'
 #timezone: 'UTC'
 
-# Password to assign ansible nodes current user, generate password using: openssl passwd -1 -salt $(openssl rand -base64 6) password_here
-#new_password: '$1$Mxb8A8pk$Kj2j7KGoBxvux/JvB5OS41'
+# Create new users
+# accounts:
+#     - name: chazragg
+#       password: '$1$Mxb8A8pk$Kj2j7KGoBxvux/JvB5OS41'
+#     - name: test
+#       password: '$1$Mxb8A8pk$Kj2j7KGoBxvux/JvB5OS41'
+
 
 # Ex. 'node' will result in, node0, node1, node2...
 #hostname_prefix: 'node'
@@ -51,9 +56,6 @@ By default:
 # Allow ssh access with password from specified ip range
 #ssh_allow_password_ip_range: '192.168.*.*'
 
-# RAM size for log2ram folder in megabytes
-log2ram_size: '40'
-
 # GPU memory split in megabytes
 gpu_mem: '16' # 16, 64, 128 or 256
 
@@ -65,8 +67,5 @@ disable_ipv6_interfaces:
   - wlan0
   - eth0
 
-# Unattended-upgrade variables
-unattended_origins_patterns:
-  - 'origin=Raspbian,codename=${distro_codename},label=Raspbian'
 ```
 
