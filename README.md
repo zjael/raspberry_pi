@@ -26,46 +26,52 @@ By default:
 
 ```yaml
 ---
-# All uncommented lines are default settings
+## All uncommented lines are default settings
 
-#locale: 'en_DK.UTF-8'
-#timezone: 'UTC'
-
-# Create new users
+## Create new users
 # accounts:
 #     - name: chazragg
 #       password: '$1$Mxb8A8pk$Kj2j7KGoBxvux/JvB5OS41'
+#       sshkey: ~/.ssh/id_rsa.pub
 #     - name: test
 #       password: '$1$Mxb8A8pk$Kj2j7KGoBxvux/JvB5OS41'
 
 
-# Ex. 'node' will result in, node0, node1, node2...
-#hostname_prefix: 'node'
+## Ex. 'node' will result in, node0, node1, node2...
+# hostname_prefix: 'node'
 
-# Addiontional packages to install
-#packages:
-#- git
-#- tmux
+## additional packages to install
+# packages:
+#   - git
+#   - tmux
 
-# Changes SSH port
-#ssh_port: 22
+## Changes SSH port
+# ssh_port: 22
 
-# Copies public key from host to ansible nodes
-#ssh_public_key: ~/.ssh/id_rsa.pub
+## Copies public key from host to pi user
+# ssh_public_key: ~/.ssh/id_rsa.pub
 
-# Allow ssh access with password from specified ip range
-#ssh_allow_password_ip_range: '192.168.*.*'
+## Allow ssh access with password from specified ip range
+# ssh_allow_password_ip_range: '192.168.*.*'
 
-# GPU memory split in megabytes
+## GPU memory split in megabytes
 gpu_mem: '16' # 16, 64, 128 or 256
 
-# Disable HDMI to preserve power
+## Disable HDMI to preserve power
 disable_hdmi: true
 
-# Disable IPv6 on specified interfaces
+## Disable IPv6 on specified interfaces
 disable_ipv6_interfaces:
   - wlan0
   - eth0
+
+## Create NFS mounts
+# nfs_mount:
+#   - src: 192.168.1.100:/nfs/ssd/shared_data
+#     path: /mnt/foo
+#     opts: rw,sync,hard,intr
+#     boot: yes
+
 
 ```
 
