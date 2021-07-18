@@ -1,0 +1,20 @@
+---
+- name: manage users
+  become: true
+  become_user: root
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    update_password: always
+    groups: "{{ item.groups | default(omit) }}"
+  with_items: "{{ accounts }}"
+  no_log: true
+- name: manage users authorized ssh keys
+  become: true
+  become_user: root
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: "{{ lookup('file', item.sshkey) | default(omit) }}"
+  with_items: "{{ accounts }}"
+  no_log: true
