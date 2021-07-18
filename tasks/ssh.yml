@@ -1,6 +1,6 @@
 ---
 - name: Set authorized key, removing all the authorized keys already set
-   ansible.posix.authorized_key:
+  ansible.posix.authorized_key:
     user: '{{ ansible_user }}'
     key: '{{ item }}'
     state: present
