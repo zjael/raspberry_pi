@@ -7,14 +7,15 @@
     cache_valid_time: 3600
   notify: reboot
 
-- include: addiontional-packages.yml
+- include: additional-packages.yml
   when: packages is defined
 
 - include: change-hostname.yml
   when: hostname_prefix is defined
 
-- include: change-password.yml
+- include: manage-users.yml
   when: accounts is defined
+  no_log: true
 
 
 - include: ssh.yml
